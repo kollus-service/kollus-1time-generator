@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Kollus 1-Time URL Generater</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compitable" content="IE=edge" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		header {
+			background-color: #666;
+			padding: 10px;
+			text-align: center;
+			font-size: 35px;
+			color: white;
+		}
+
+		nav {
+			float: left;
+			width: 30%;
+			max-width: 600px;
+			height: 100%;
+			/* only for demonstration, should be removed */
+			background: linear-gradient(#ccc, rgba(255, 255, 255, 0.3));
+			padding: 20px;
+		}
+
+		nav ul {
+			list-style-type: none;
+			padding: 0;
+		}
+
+		nav ul li label {}
+
+		nav ul li textarea {
+			min-height: 50px;
+
+		}
+
+		article {}
+
+		footer {}
+
+		.input-group-text .tooltiptext {
+			visibility: hidden;
+			display: block;
+			width: 300px;
+			background-color: rgba(80, 80, 80, 0.5);
+			color: white;
+			word-wrap: break-word;
+			white-space: pre-line;
+			text-align: left;
+			border-radius: 6px;
+			padding: 0px 3px;
+			/* Position the tooltip */
+			position: absolute;
+			z-index: 1;
+		}
+
+		.input-group-text:hover .tooltiptext {
+			visibility: visible;
+
+		}
+
+		.tooltiptext {
+			display: block;
+			word-wrap: break-word;
+		}
+
+		@media (max-width: 600px) {
+			nav,
+			article {
+				width: 100%;
+				height: auto;
+			}
+		}
+
+		#result {
+			width: 100%;
+		}
+
+		#result td,
+		#result th {
+			border: 1px solid black
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h3>Kollus 1-Time URL Generater</h3>
+	</header>
+
+	<nav>
+		<ul>
+			<li>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Secret Key</span>
+					</div>
+					<input class="form-control" type="text" name="secretkey" id="secretkey" placeholder="보안키" value="" />
+				</div>
+
+
+			</li>
+			<li>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							User Key
+
+					</span>
+					</div>
+					<input class="form-control" type="text" name="customkey" id="customkey" placeholder="사용자키" value="" />
+				</div>
+			</li>
+			<li>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Expt
+							<span class="tooltiptext">
+								지정한 일자의 23시 59분 59초까지 URL을 사용할수 있음. 입력 형식은 YYYY-MM-DD
+							</span>
+						</span>
+					</div>
+					<input class="form-control datepicker" type="text" name="secretkey" id="expt" value="" />
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" checked="checked" name="mode" id="mode" />
+					<label class="form-check-label" for="mode">Player/Download</label>
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="seekable" id="seekable" />
+					<label class="form-check-label" for="seekable">Prevent Seekable</label>
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="bookmark" id="bookmark" />
+					<label class="form-check-label" for="bookmark">Disable Bookmark</label>
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="disable_playrate" id="disable_playrate" />
+					<label class="form-check-label" for="bookmark">Disable Play Rate</label>
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="autoplay" id="autoplay" />
+					<label class="form-check-label" for="autoplay">Autoplay</label>
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="mute" id="mute" />
+					<label class="form-check-label" for="autoplay">Mute</label>
+				</div>
+			</li>
+			<li>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" name="html5" id="html5" />
+					<label class="form-check-label" for="html5">HTML5 Player</label>
+				</div>
+			</li>
+
+			<li>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">MCK
+							<span class="tooltiptext">
+								<p>
+									미디어 컨텐츠키는 콤마(,)를 구분자로 사용하여 사용하시면 여러개의 1-Time URL을 생성할수 있습니다.
+								</p>
+								<p>예) 8PqNoGRN, ZN1EoGRk<br/>
+									8PqNoGRN<br/>
+									ZN1EoGRk
+								</p>
+							</span>
+						</span>
+					</div>
+					<textarea class="form-control" type="text" name="mck" id="mck" placeholder="미디어컨텐츠키" value=""></textarea>
+				</div>
+
+
+			</li>
+			<li>
+				<button type="button" value="Generate" id="btn_gen">Generate</button>
+			</li>
+		</ul>
+	</nav>
+	<div style="float:right; width:69%;">
+
+
+		<table id="result" class="table" style="max-width:1000px; table-layout: fixed;">
+			<tr>
+				<th style="width:100px;">MCK</th>
+				<th style="width:70px;">EXEC</th>
+				<th style="width:70px;">Copy</th>
+				<th style="width:100%;">1-time url</th>
+			</tr>
+		</table>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="jwt.js"></script>
+	<script>
+		var hs256 = "{\"typ\":\"JWT\",\"alg\":\"HS256\"}";
+
+		$(function() {
+
+			var date = new Date();
+			var day = date.getFullYear() + "-" + addZero(date.getMonth() + 1) + "-" + addZero(date.getDate());
+			$('#expt').val(day);
+
+			$(document).on('click', '.play', function() {
+				var src = $($(this).parent().parent().find('td')[2]).html();
+				$('#player').attr('src', src.replace('&amp;', '&'));
+
+			});
+			$('#btn_gen').on('click', function() {
+
+				var d = new Date($('#expt').val() + "T23:59:59");
+
+				var expt = parseInt(d.getTime() / 1000, 10);
+				var secretkey = $('#secretkey').val();
+				var customkey = $('#customkey').val();
+				var mode = $('#mode').is(':checked');
+				var seekable = $('#seekable').is(':checked');
+				var bookmark = $('#bookmark').is(':checked');
+				var disable_playrate = $('#disable_playrate').is(':checked');
+				var autoplay = $('#autoplay').is(':checked');
+				var mute = $('#mute').is(':checked');
+				var html5 = $('#html5').is(':checked');
+
+
+				var mcks = $('#mck').val().replace(/,/gi, '\n').split('\n');
+				if (expt <= 0 || secretkey == undefined || customkey == undefined || mcks == undefined ||
+					secretkey == '' || customkey == '' || mcks == ''
+				) {
+					return false;
+				}
+
+				$('#result tr.r').remove();
+				for (var idx = 0; idx < mcks.length; idx++) {
+					if (mcks[idx].trim() != '') {
+						var payload_json = {};
+						payload_json.cuid = "";
+						payload_json.expt = expt;
+						var mcs = [];
+						var mc = {};
+						mc.mckey = mcks[idx].trim();
+
+						if (mode && seekable) mc.seek = false;
+						if (mode && bookmark) mc.bookmark = false;
+						if (mode && disable_playrate) mc.disable_playrate = true;
+						mcs.push(mc);
+						payload_json.mc = mcs;
+
+						try {
+							var token = new jwt.WebToken(JSON.stringify(payload_json), hs256);
+						} catch (e) {
+							alert(e);
+						}
+						var signed = token.serialize(secretkey);
+
+						var url;
+						if (!mode) {
+							url = "http://v.kr.kollus.com/sr/media-file.mp4?download&jwt=" + signed + "&custom_key=" + customkey;
+						} else {
+							url = "http://v.kr.kollus.com/s?jwt=" + signed + "&custom_key=" + customkey;
+							if (autoplay) url += '&autoplay';
+							if (mute) url += '&mute';
+							if (html5) url += '&player_version=html';
+						}
+
+
+						var tr = '<tr><td>' + mcks[idx] + '</td>' +
+							'<td><a href="' + url + '" target="_blank">'
+							+ (mode ? 'Play' : 'Download') + '</a></td>'
+							+'<td><button class="copy" data-url="' + url + '">Copy</button></td>'
+							+ '<td alt="'+url+'" style="text-overflow:ellipsis;white-space:nowrap;word-wrap:normal;width:100px;overflow:hidden;">'
+							+ url + '</td></tr>';
+
+
+						$('#result tr:last').after(tr);
+					}
+				}
+				return false;
+			});
+			$(document).on('click', 'button.copy', function() {
+				setClipboardText($(this).data('url'));
+			});
+		});
+
+		function addZero(n) {
+			return n < 10 ? "0" + n : n;
+		}
+
+		function setClipboardText(text) {
+			var id = "mycustom-clipboard-textarea-hidden-id";
+			var existsTextarea = document.getElementById(id);
+
+			if (!existsTextarea) {
+				console.log("Creating textarea");
+				var textarea = document.createElement("textarea");
+				textarea.id = id;
+				// Place in top-left corner of screen regardless of scroll position.
+				textarea.style.position = 'fixed';
+				textarea.style.top = 0;
+				textarea.style.left = 0;
+
+				// Ensure it has a small width and height. Setting to 1px / 1em
+				// doesn't work as this gives a negative w/h on some browsers.
+				textarea.style.width = '1px';
+				textarea.style.height = '1px';
+
+				// We don't need padding, reducing the size if it does flash render.
+				textarea.style.padding = 0;
+
+				// Clean up any borders.
+				textarea.style.border = 'none';
+				textarea.style.outline = 'none';
+				textarea.style.boxShadow = 'none';
+
+				// Avoid flash of white box if rendered for any reason.
+				textarea.style.background = 'transparent';
+				document.querySelector("body").appendChild(textarea);
+				console.log("The textarea now exists :)");
+				existsTextarea = document.getElementById(id);
+			} else {
+				console.log("The textarea already exists :3")
+			}
+
+			existsTextarea.value = text;
+			existsTextarea.select();
+
+			try {
+				var status = document.execCommand('copy');
+				if (!status) {
+					console.error("Cannot copy text");
+				} else {
+					console.log("The text is now on the clipboard");
+				}
+			} catch (err) {
+				console.log('Unable to copy.');
+			} finally {
+				existsTextarea.value('');
+			}
+		}
+	</script>
+</body>
+
+</html>
